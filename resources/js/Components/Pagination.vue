@@ -7,7 +7,7 @@ let props = defineProps({
 </script>
 
 <template>
-    <div class="mt-6">
+    <div>
         <ul class="inline-flex -space-x-px">
             <template v-for="link in link_list">
                 <li v-if="link.label === '&laquo; Previous'">

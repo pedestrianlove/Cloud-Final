@@ -109,7 +109,10 @@ watch(search, debounce(function (value) {
                         </div>
 
                         <!-- Pagination -->
-                        <Pagination :link_list="user_list.links"/>
+                        <Pagination
+                            class="mt-6"
+                            :link_list="user_list.links"
+                        />
                         <!-- Pagination -->
                     </div>
                 </div>
