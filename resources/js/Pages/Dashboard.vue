@@ -1,20 +1,111 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
+import { ref, watch } from 'vue';
+import { Inertia } from '@inertiajs/inertia';
+import debounce from "lodash/debounce";
+
+let props = defineProps({
+    user_list: Object,
+    query: Object,
+});
+
+// Setup filtering
+let search = ref(props.query.search);
+watch(search, debounce(function (value) {
+    Inertia.get('/dashboard', { search: value }, {
+        preserveState: true,
+        replace: true
+    });
+}, 300));
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <Head>
+        <title>Worker Management Console</title>
+    </Head>
 
     <AuthenticatedLayout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Dashboard</h2>
+            <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">Worker Management Console</h2>
         </template>
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 text-gray-900 dark:text-gray-100">You're logged in!</div>
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+
+                        <input v-model="search" type="text" placeholder="Search..." class="border px-2 rounded-lg mb-5 w-full" />
+
+                        <div class="flex flex-col">
+                            <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                                <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                                    <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                            <!-- User Rows -->
+                                                <tr v-for="user in user_list.data" :key="user.id">
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <div>
+                                                                <div class="text-sm font-medium text-gray-900">
+                                                                    {{ user.id }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <div>
+                                                                <div class="text-sm font-medium text-gray-900">
+                                                                    {{ user.name }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <div>
+                                                                <div class="text-sm font-medium text-gray-900">
+                                                                    {{ user.email }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-6 py-4 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <div>
+                                                                <div class="text-sm font-medium text-gray-900">
+                                                                    {{ user.description }}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            <!-- User Rows -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="mt-6">
+                            <ul class="inline-flex -space-x-px">
+                                <template v-for="link in user_list.links">
+                                    <Link
+                                        class="px-1 hover:text-blue-300"
+                                        v-if="link.url"
+                                        :href="link.url"
+                                        v-html="link.label"
+                                    />
+                                    <span v-else v-html="link.label" class="text-gray-500"></span>
+                                </template>
+                            </ul>
+                        </div>
+                        <!-- Pagination -->
+                    </div>
                 </div>
             </div>
         </div>

@@ -28,7 +28,17 @@ Route::get('/', function () {
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard', [
-        'user_list' => User::all()->paginate(10)->withQueryString(),
+        'user_list' => User::search(request('search'))
+            ->paginate(10)->withQueryString()
+            ->through(fn ($user) => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'description' => $user->description,
+            ]),
+
+            // Return last input
+            'query' => request()->only('search'),
     ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 

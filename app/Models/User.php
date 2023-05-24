@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'description'
     ];
 
     /**
@@ -42,4 +43,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    // A Search filter for the user model
+    public function scopeSearch($query, $val)
+    {
+        return $query
+            ->when($val ?? false, fn ($query, $val) =>
+                $query
+                    ->where('name', 'like', '%' . $val . '%')
+                    ->orWhere('email', 'like', '%' . $val . '%')
+            );
+    }
 }
