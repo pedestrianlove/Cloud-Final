@@ -37,7 +37,7 @@ watch(search, debounce(function (value) {
                 <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                        <input v-model="search" type="text" placeholder="Search..." class="border px-2 rounded-lg mb-5 w-full" />
+                        <input v-model="search" type="text" placeholder="Search..." class="border px-2 rounded-lg mb-5 w-full text-black" />
 
                         <div class="flex flex-col">
                             <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
